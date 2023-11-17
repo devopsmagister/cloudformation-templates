@@ -2,26 +2,22 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: AWS template for the Postgres RDS
 
 Parameters:
-  Envrinment:
+  Environment:
     Description: 'Select environment'
     Type: String
     AllowedValues: ["dev", "qa", "preprod", "prod"]
   SubnetId1:
     Description: 'SubnetId 1'
     Type: String
-    Default: 'subnet-0d060fd5ca130d1f4'
   SubnetId2:
-    Description: 'SubnetId 1'
+    Description: 'SubnetId 2'
     Type: String
-    Default: 'subnet-08fe16dabde710c2c'
   VpcId:
     Description: 'VPC Id'
     Type: String
-    Default: 'vpc-0584699bf4c05750f'
   VpcCidr:
     Description: 'VPC CIDR'
     Type: String
-    Default: '172.31.0.0/16'
   DBSnapshotIdentifier:
     Description: 'Optional name or Amazon Resource Name (ARN) of the DB snapshot from which you want to restore (leave blank to create an empty database).'
     Type: String
@@ -83,6 +79,7 @@ Parameters:
   EngineVersion:
     Description: 'PostgreSQL version.'
     Type: String
+    Default: '13.11'
     AllowedValues: ['15.3', '15.2', '14.8', '14.7', '14.4', '14.3', '13.11', '13.10', '13.7', '12.15', '12.14', '12.11', '11.20', '11.19', '11.16'] # aws rds describe-db-engine-versions --engine postgres --query "DBEngineVersions[].EngineVersion"
   EnableIAMDatabaseAuthentication:
     Description: 'Enable mapping of AWS Identity and Access Management (IAM) accounts to database accounts (https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.IAMDBAuth.html).'
@@ -94,8 +91,8 @@ Resources:
   SubnetGroups:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
-      DBSubnetGroupDescription: !Sub 'RDS-Subnet-Group-Postgres-${Envrinment}'
-      DBSubnetGroupName: !Sub 'RDS-Subnet-Group-Postgres-${Envrinment}'
+      DBSubnetGroupDescription: !Sub 'RDS-Subnet-Group-Postgres-${Environment}'
+      DBSubnetGroupName: !Sub 'RDS-Subnet-Group-Postgres-${Environment}'
       SubnetIds: 
         - !Ref SubnetId1
         - !Ref SubnetId2
@@ -113,15 +110,15 @@ Resources:
   RDSDBInstanceParameterGroup:
     Type: AWS::RDS::DBParameterGroup
     Properties:
-      DBParameterGroupName: !Sub 'RDS-Paramer-Group-Postgres-${Envrinment}'
-      Description: !Sub 'RDS-Paramer-Group-Postgres-${Envrinment}'
+      DBParameterGroupName: !Sub 'RDS-Paramer-Group-Postgres-${Environment}'
+      Description: !Sub 'RDS-Paramer-Group-Postgres-${Environment}'
       Family: 'postgres14'
       # Parameters: Json
 
   RDSSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
-      GroupDescription: !Sub 'RDS-securitygroup-${Envrinment}'
+      GroupDescription: !Sub 'RDS-securitygroup-${Environment}'
       VpcId: !Ref VpcId
       SecurityGroupIngress:
       - IpProtocol: tcp
@@ -131,7 +128,7 @@ Resources:
   DatabaseSecurityGroupInSSHBastion:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
-      GroupDescription: !Sub 'Bastion-host-securitygroup-${Envrinment}'
+      GroupDescription: !Sub 'Bastion-host-securitygroup-${Environment}'
       VpcId: !Ref VpcId
       SecurityGroupIngress:
       - IpProtocol: tcp

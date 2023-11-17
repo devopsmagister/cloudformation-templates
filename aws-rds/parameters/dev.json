@@ -1,0 +1,22 @@
+[
+    {
+        "ParameterKey": "Environment",
+        "ParameterValue": "EnvironmentUpdateHere"
+    },
+    {
+        "ParameterKey": "SubnetId1",
+        "ParameterValue": "subnet-02e54571f0c066699"
+    },
+    {
+        "ParameterKey": "SubnetId2",
+        "ParameterValue": "subnet-078f10f742a431130"
+    },
+    {
+        "ParameterKey": "VpcId",
+        "ParameterValue": "vpc-0763470a471e166db"
+    },
+    {
+        "ParameterKey": "VpcCidr",
+        "ParameterValue": "172.31.0.0/16"
+    }
+]
